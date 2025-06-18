@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ありがとう画面切替デモ</title>
+  <style>
+    html,body      { margin:0; width:100%; height:100%; }
+    .full          { width:100%; height:100%; object-fit:cover; display:block; }
+    #thankImage    { display:none; }           /* ← 最初は非表示 */
+  </style>
+</head>
+<body>
+
+<!-- ── 最初の UI（飴ポップアップ etc. を置く場所）────────────── -->
+<div id="mainContent">
+  <!-- ここは例としてシンプルにボタンだけ載せています。
+       あなたのレイアウトを丸ごと入れて OK です -->
+  <button id="pressbtn" style="font-size:24px;padding:12px 40px;">あげる</button>
+</div>
+
+<!-- ── ありがとう PNG をフルスクリーンで ─────────────────── -->
+<img id="thankImage"
+     src="thank.png"
+     alt="ありがとう！"
+     class="full">
+
+<!-- ── 自動クリック対象（/status = heaven のとき）────────────── -->
+<a id="boxlink" href="next.html" style="display:none;">dummy</a>
+
+<script>
+  const TUNNEL_URL = "https://runtannet.cryptoorg.org";   // ★必ず書き換えてください
+
+  /* ---------------------------------------------------------------
+     「あげる」ボタンを監視して、クリック→ /on 送信 → 画面差し替え
+  ----------------------------------------------------------------*/
+  function bindPressBtn() {
+    const btn = document.getElementById("pressbtn");
+    if (!btn) return;              // ボタンが無い場合は何もしない
+
+    // 一度だけバインドしたいので { once:true } を付ける
+    btn.addEventListener("click", () => {
+      console.log("[UI] pressbtn 押下 → /on");
+
+      fetch(`${TUNNEL_URL}/on`)
+        .then(res  => res.text())
+        .then(text => {
+          console.log("[HTTP] /on 応答:", text);
+
+          // メイン UI を隠して PNG を表示
+          document.getElementById("mainContent").style.display = "none";
+          document.getElementById("thankImage").style.display   = "block";
+        })
+        .catch(err => console.error("[HTTP] /on エラー:", err));
+    }, { once:true });
+  }
+
+  /* ---------------------------------------------------------------
+     /status を 1 秒ごとに監視し heaven になったら #boxlink をクリック
+  ----------------------------------------------------------------*/
+  function monitorBoxlink() {
+    const link = document.getElementById("boxlink");
+    if (!link) return;
+
+    setInterval(() => {
+      fetch(`${TUNNEL_URL}/status`)
+        .then(res  => res.text())
+        .then(text => {
+          console.log("[HTTP] /status:", text.trim());
+          if (text.trim() === "heaven") {
+            console.log("[ACTION] heaven 検出 → boxlink.click()");
+            link.click();          // 例: next.html へ遷移
+          }
+        })
+        .catch(err => console.error("[HTTP] /status エラー:", err));
+    }, 1000);
+  }
+
+  /* ---------------- 初期化 ------------------------------------*/
+  document.addEventListener("DOMContentLoaded", () => {
+    bindPressBtn();
+    monitorBoxlink();
+  });
+</script>
+</body>
+</html>
