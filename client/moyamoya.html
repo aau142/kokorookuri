@@ -7,16 +7,89 @@
     body {
       margin: 0;
       background-color: black;
+      position: relative;
     }
+
     .full-image {
       width: 100vw;
       height: 100vh;
       object-fit: cover;
       display: block;
+      cursor: pointer;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      width: 70vw;
+      max-width: 500px;
+      z-index: 10;
+    }
+
+    .popup img {
+      width: 100%;
+      border-radius: 20px;
+    }
+
+    .button-group {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 30px;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    .popup-button {
+      font-size: 20px;
+      padding: 10px 30px;
+      border-radius: 25px;
+      border: 2px solid white;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .popup-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .popup-button.red {
+      background-color: #8a3b3b;
+    }
+
+    .popup-button.white {
+      background-color: black;
     }
   </style>
 </head>
 <body>
-  <img src="moyamoya.png" alt="セリフ付き画面" class="full-image">
+
+  <!-- メイン画像（クリックでポップアップ表示） -->
+  <img src="moyamoya.png" alt="セリフ付き画面" class="full-image" onclick="showPopup()">
+
+  <!-- 飴ポップアップ（画像＋ボタン） -->
+  <div class="popup" id="popup">
+    <img src="sentaku.png" alt="飴をあげる？">
+
+    <div class="button-group">
+      <button class="popup-button white" onclick="alert('あげないを選びました')">あげない</button>
+      <button class="popup-button red" onclick="alert('あげるを選びました')">あげる</button>
+    </div>
+  </div>
+
+  <script>
+    function showPopup() {
+      document.getElementById('popup').style.display = 'block';
+    }
+  </script>
+
 </body>
 </html>
