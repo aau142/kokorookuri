@@ -73,23 +73,44 @@
 <body>
 
   <!-- メイン画像（クリックでポップアップ表示） -->
-  <img src="moyamoya.png" alt="セリフ付き画面" class="full-image" onclick="showPopup()">
+  <img src="moyamoya.png" alt="セリフ付き画面"
+       class="full-image" onclick="showPopup()">
 
-  <!-- 飴ポップアップ（画像＋ボタン） -->
+  <!-- 飴ポップアップ -->
   <div class="popup" id="popup">
     <img src="sentaku.png" alt="飴をあげる？">
 
     <div class="button-group">
-      <button class="popup-button white" onclick="alert('あげないを選びました')">あげない</button>
-      <button class="popup-button red" onclick="alert('あげるを選びました')">あげる</button>
+      <button class="popup-button white"
+              onclick="alert('あげないを選びました')">
+        あげない
+      </button>
+
+      <!-- ★ ここを変更：onclick で handleGive() を呼ぶ -->
+      <button class="popup-button red" onclick="handleGive()">
+        あげる
+      </button>
     </div>
   </div>
 
   <script>
+    /* ポップアップ表示 */
     function showPopup() {
       document.getElementById('popup').style.display = 'block';
     }
-  </script>
 
+    /* ──────────── 追加 ────────────
+       「あげる」を押したら CandyScene.html へ遷移         */
+    function handleGive() {
+      window.location.href = 'CandyScene.html';   // パスは環境に合わせて
+    }
+  </script>
 </body>
 </html>
+
+
+
+
+
+
+
