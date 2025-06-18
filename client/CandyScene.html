@@ -1,68 +1,43 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>ありがとう画面切替デモ</title>
-  <style>
-    html,body { margin:0; width:100%; height:100%; }
-    .full     { width:100%; height:100%; object-fit:cover; display:block; }
-    #thankImage { display:none; }               /* ← 最初は隠す */
-  </style>
+<meta charset="UTF-8" />
+<title>CandyScene – Debug</title>
+<style>
+  html,body{margin:0;width:100%;height:100%;background:#000;}
+  .full   {width:100%;height:100%;object-fit:cover;display:block;}
+  #thankImage{display:none;}
+</style>
 </head>
 <body>
 
-<!--──── 最初の UI ──────────────────────────────-->
 <div id="mainContent">
   <button id="pressbtn"
-          style="font-size:24px;padding:12px 40px;">
-    あげる
-  </button>
+          style="font-size:24px;padding:12px 40px;">あげる</button>
 </div>
 
-<!--──── ありがとう PNG ─────────────────────────-->
-<img id="thankImage" src="thank.png" alt="ありがとう！" class="full">
-
-<!--──── heaven 監視で使うリンク（不要なら削除）────────-->
-<a id="boxlink" href="home.html" style="display:none;"></a>
+<!-- ❶ まず “必ず読み込める” パスで確認（いったん絶対パス） -->
+<img id="thankImage"
+     src="/client/thank.png"        <!-- ← Vercel に合わせて修正 -->
+     class="full" alt="ありがとう！">
 
 <script>
-const TUNNEL_URL = "https://runtannet.cryptoorg.org";   // ←実 URLに
-
-/*==================================================
-  DOM がそろったら初期化
-==================================================*/
 document.addEventListener("DOMContentLoaded", () => {
-  const btn   = document.getElementById("pressbtn");
-  const main  = document.getElementById("mainContent");
-  const thx   = document.getElementById("thankImage");
-  const link  = document.getElementById("boxlink");     // ★
+  const btn  = document.getElementById("pressbtn");
+  const main = document.getElementById("mainContent");
+  const thx  = document.getElementById("thankImage");
 
-  /*---------- あげる → 画面切替 → /on -------------*/
+  /* ロードエラー検知用 */
+  thx.addEventListener("error", () =>
+    console.error("[IMG] thank.png が読み込めません"));
+
   btn.addEventListener("click", () => {
-    // ① 画面だけ先に切り替え
     main.style.display = "none";
     thx.style.display  = "block";
-
-    // ② サーバへ通知（CORS を気にしないなら no-cors）
-    fetch(`${TUNNEL_URL}/on`, { mode:"no-cors" }).catch(console.error);
+    /* CORS を完全に無視（結果は読まない） */
+    fetch("https://runtannet.cryptoorg.org/on", { mode:"no-cors" })
+      .catch(()=>{});
   }, { once:true });
-
-  /*---------- /status を 1 秒ごとに確認 --------------*/
-  // ★ 監視が不要なら次の if 文ごと削除して OK
-  if (link) {
-    setInterval(() => {
-      fetch(`${TUNNEL_URL}/status`)
-        .then(r => r.text())
-        .then(txt => {
-          console.log("/status →", txt.trim());
-          if (txt.trim() === "heaven") {
-            console.log("heaven 検出 → 遷移");
-            link.click();          // home.html へ
-          }
-        })
-        .catch(e => console.error("/status ERR", e));
-    }, 1000);
-  }
 });
 </script>
 </body>
