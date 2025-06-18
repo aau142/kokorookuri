@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>こころおくりボタン</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .button-container {
+      display: flex;
+      gap: 50px;
+    }
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .icon-button img {
+      width: 150px;
+      height: 150px;
+      border-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
+    }
+    .icon-button img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+<div class="button-container">
+  <!-- 泣いているキャラ -->
+  <button class="icon-button" onclick="alert('泣いているキャラがクリックされました')">
+    <img src="widget_icon.png" alt="泣いているキャラ">
+  </button>
+
+  <!-- 笑顔のキャラ -->
+  <button class="icon-button" onclick="alert('笑顔のキャラがクリックされました')">
+    <img src="icon.png" alt="笑顔キャラ">
+  </button>
+</div>
+
+</body>
+</html>
